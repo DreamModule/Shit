@@ -1,0 +1,68 @@
+&НаКлиенте
+Переменная Буфер;
+
+&НаКлиенте
+Процедура ПриОткрытии(Отказ)
+	ИнициализироватьImGuiJS();
+КонецПроцедуры
+
+&НаКлиенте
+Процедура ИнициализироватьImGuiJS()
+	
+	HTML = "
+	|<!DOCTYPE html>
+	|<html>
+	|<head>
+	|<meta charset='utf-8'>
+	|<style>body { margin: 0; overflow: hidden; background-color: #000; }</style>
+	|<script src='https://flyover.github.io/imgui-js/dist/imgui.umd.js'></script>
+	|<script src='https://flyover.github.io/imgui-js/dist/imgui_impl.umd.js'></script>
+	|</head>
+	|<body>
+	|<canvas id='output'></canvas>
+	|<script>
+	|    (async function() {
+	|        await ImGui.default();
+	|        const canvas = document.getElementById('output');
+	|        const devicePixelRatio = window.devicePixelRatio || 1;
+	|        canvas.width = window.innerWidth * devicePixelRatio;
+	|        canvas.height = window.innerHeight * devicePixelRatio;
+	|        
+	|        ImGui.CreateContext();
+	|        ImGui.StyleColorsDark();
+	|        
+	|        ImGui_Impl.Init(canvas);
+	|        
+	|        function _loop(time) {
+	|            ImGui_Impl.NewFrame(time);
+	|            ImGui.NewFrame();
+	|            
+	|            if (ImGui.BeginMainMenuBar()) {
+	|                if (ImGui.BeginMenu('Penis')) {
+	|                    ImGui.EndMenu();
+	|                }
+	|                ImGui.EndMainMenuBar();
+	|            }
+	|
+	|            ImGui.EndFrame();
+	|            ImGui.Render();
+	|            
+	|            const gl = canvas.getContext('webgl') || canvas.getContext('2d');
+	|            if (gl) {
+	|                 ImGui_Impl.RenderDrawData(ImGui.GetDrawData());
+	|            }
+	|            
+	|            window.requestAnimationFrame(_loop);
+	|        }
+	|        
+	|        window.requestAnimationFrame(_loop);
+	|    })();
+	|</script>
+	|</body>
+	|</html>";
+	
+	Элементы.ПолеHTML.Документ.Open();
+	Элементы.ПолеHTML.Документ.Write(HTML);
+	Элементы.ПолеHTML.Документ.Close();
+	
+КонецПроцедуры
