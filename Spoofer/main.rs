@@ -21,8 +21,6 @@ use chrono::Local;
 use serde::{Deserialize, Serialize};
 use regex::Regex;
 
-// --- Logging ---
-
 #[allow(dead_code)]
 enum LogLevel { Info, Success, Warning, Error }
 
@@ -47,8 +45,6 @@ fn log_message(level: LogLevel, message: &str) {
         writeln!(file, "{}", log_line).ok();
     }
 }
-
-// --- Utilities ---
 
 fn gen_alphanumeric(len: usize) -> String {
     thread_rng()
@@ -150,8 +146,6 @@ fn enum_registry_subkeys(path: &str) -> Result<Vec<String>, String> {
     Ok(subkeys)
 }
 
-// --- Registry Core ---
-
 fn read_reg_key(path: &str, value_name: &str) -> Result<String, ()> {
     let wide_path: Vec<u16> = path.encode_utf16().chain(std::iter::once(0)).collect();
     let wide_value_name: Vec<u16> = value_name.encode_utf16().chain(std::iter::once(0)).collect();
@@ -250,15 +244,12 @@ fn set_reg_key_safe(path: &str, value_name: &str, data: &str, dry_run: bool) {
         Ok(_) => log_message(LogLevel::Success, &format!("{}\\{} -> \"{}\"", path, value_name, data)),
         Err(e) => {
             log_message(LogLevel::Error, &format!("Update failed {}\\{}: {}", path, value_name, e));
-            // Warning about protected keys
             if !dry_run {
                 log_message(LogLevel::Warning, &format!("Key {} may be TrustedInstaller-protected. Manual ownership required.", path));
             }
         }
     }
 }
-
-// --- Spoofing Functions ---
 
 fn spoof_basic_ids(dry_run: bool) -> Result<(), String> {
     log_message(LogLevel::Info, "Start: Basic IDs");
@@ -285,7 +276,6 @@ fn spoof_basic_ids(dry_run: bool) -> Result<(), String> {
 fn spoof_bios(dry_run: bool) -> Result<(), String> {
     log_message(LogLevel::Info, "Start: BIOS/CPU");
     
-    // UEFI/Secure Boot warning
     log_message(LogLevel::Warning, "!!! WARNING: BIOS keys (HARDWARE\\DESCRIPTION\\System\\BIOS) may fail if UEFI Secure Boot is enabled. !!!");
 
     let bios_serial = gen_realistic_serial();
@@ -614,11 +604,8 @@ fn spoof_all(config: &Config, dry_run: bool) -> Result<(), String> {
 }
 
 
-// --- Entry Point ---
-
 fn main() -> Result<(), String> {
     
-    // Admin check
     unsafe {
         if IsUserAnAdmin() == 0 {
             log_message(LogLevel::Error, "Script stopped: Administrator privileges required!");
