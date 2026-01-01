@@ -1,0 +1,19 @@
+[package]
+name = "hwid_spoofer_survival"
+version = "2.1.0"
+edition = "2021"
+
+# Dependencies for Windows API, GUID, Random, Time, Config, Regex, and Ctrl-C handling
+[dependencies]
+winapi = { version = "0.3.9", features = [
+    "winreg", "winnt", "minwindef", "securitybaseapi", "fileapi", 
+    "ioapiset", "winioctl", "handleapi", "winbase", "processthreadsapi", 
+    "sysinfoapi", "errhandlingapi", "aclapi", "accctrl", "ntsecapi"
+] }
+rand = "0.8"
+uuid = { version = "1.6", features = ["v4"] }
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+regex = "1.10"
+ctrlc = "3.4"
